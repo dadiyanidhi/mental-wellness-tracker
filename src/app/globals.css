@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens as CSS variables. Accessibility themes flip these at the root,
+ * so every component inherits correct contrast without conditional classes.
+ * Default palette is checked to meet WCAG 2.2 AA contrast (>= 4.5:1 for text).
+ */
+:root {
+  --bg: 247 248 250; /* near-white */
+  --surface: 255 255 255;
+  --border: 209 213 219;
+  --text: 17 24 39; /* slate-900 */
+  --muted: 75 85 99; /* slate-600, 4.5:1 on surface */
+  --primary: 67 56 202; /* indigo-700 */
+  --primary-fg: 255 255 255;
+  --danger: 153 27 27; /* red-800 */
+  --danger-fg: 255 255 255;
+  --font-sans: "Segoe UI", system-ui, sans-serif;
+}
+
+/* High-contrast theme: black on white / yellow-on-black accents, >= 7:1. */
+:root[data-contrast="high"] {
+  --bg: 255 255 255;
+  --surface: 255 255 255;
+  --border: 0 0 0;
+  --text: 0 0 0;
+  --muted: 0 0 0;
+  --primary: 0 0 0;
+  --primary-fg: 255 255 255;
+  --danger: 122 0 0;
+  --danger-fg: 255 255 255;
+}
+
+/* Dyslexia-friendly font + spacing. */
+:root[data-dyslexia="true"] {
+  --font-sans: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  word-spacing: 0.12em;
+  line-height: 1.8;
+}
+
+html {
+  font-size: calc(100% * var(--text-scale, 1));
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: var(--font-sans);
+}
+
+/* Respect user/system reduced-motion AND the in-app toggle. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+:root[data-reduce-motion="true"] *,
+:root[data-reduce-motion="true"] *::before,
+:root[data-reduce-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Visible focus indicator for keyboard users — never remove outlines. */
+:focus-visible {
+  outline: 3px solid rgb(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip link: hidden until focused. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: rgb(var(--primary));
+  color: rgb(var(--primary-fg));
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Screen-reader-only utility. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
